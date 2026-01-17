@@ -48,7 +48,6 @@ public class StatsCommand extends AbstractPlayerCommand {
                 // Item stats
                 playerRef.sendMessage(Message.raw(""));
                 playerRef.sendMessage(Message.raw("Items:"));
-                playerRef.sendMessage(Message.raw("  Items Crafted: " + rs.getInt("items_crafted")));
                 playerRef.sendMessage(Message.raw("  Items Dropped: " + rs.getInt("items_dropped")));
                 playerRef.sendMessage(Message.raw("  Items Picked Up: " + rs.getInt("items_picked_up")));
                 
