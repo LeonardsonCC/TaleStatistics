@@ -1,0 +1,44 @@
+@PanelBg = PatchStyle(TexturePath: "StatsBackground.png");
+
+Group {
+  LayoutMode: Center;
+
+  Group #StatsRoot {
+    Anchor: (Width: 720, Height: 760);
+    LayoutMode: Top;
+    Padding: (Left: 24, Right: 24, Top: 18, Bottom: 18);
+    Background: @PanelBg;
+
+    Label #Title {
+      Text: "PLAYER STATS";
+      Style: (FontSize: 28, TextColor: #ffffff, RenderBold: true, Alignment: Center);
+      Padding: (Bottom: 10);
+    }
+
+    Label #Subtitle {
+      Text: "Player";
+      Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center);
+      Padding: (Bottom: 16);
+    }
+
+    Label #CombatHeader { Text: "Combat"; Style: (FontSize: 18, TextColor: #e5d18a, RenderBold: true); Padding: (Bottom: 6); }
+    Label #CombatKills { Text: "Player Kills: 0"; Style: (FontSize: 14, TextColor: #ffffff); }
+    Label #CombatMobKills { Text: "Mob Kills: 0"; Style: (FontSize: 14, TextColor: #ffffff); }
+    Label #CombatDeaths { Text: "Deaths: 0"; Style: (FontSize: 14, TextColor: #ffffff); Padding: (Bottom: 14); }
+
+    Label #BuildingHeader { Text: "Building"; Style: (FontSize: 18, TextColor: #e5d18a, RenderBold: true); Padding: (Bottom: 6); }
+    Label #BuildingPlaced { Text: "Blocks Placed: 0"; Style: (FontSize: 14, TextColor: #ffffff); }
+    Label #BuildingBroken { Text: "Blocks Broken: 0"; Style: (FontSize: 14, TextColor: #ffffff); Padding: (Bottom: 14); }
+
+    Label #ItemsHeader { Text: "Items"; Style: (FontSize: 18, TextColor: #e5d18a, RenderBold: true); Padding: (Bottom: 6); }
+    Label #ItemsDropped { Text: "Items Dropped: 0"; Style: (FontSize: 14, TextColor: #ffffff); }
+    Label #ItemsPickedUp { Text: "Items Picked Up: 0"; Style: (FontSize: 14, TextColor: #ffffff); Padding: (Bottom: 14); }
+
+    Label #SocialHeader { Text: "Social"; Style: (FontSize: 18, TextColor: #e5d18a, RenderBold: true); Padding: (Bottom: 6); }
+    Label #SocialMessages { Text: "Messages Sent: 0"; Style: (FontSize: 14, TextColor: #ffffff); Padding: (Bottom: 14); }
+
+    Label #GeneralHeader { Text: "General"; Style: (FontSize: 18, TextColor: #e5d18a, RenderBold: true); Padding: (Bottom: 6); }
+    Label #GeneralDistance { Text: "Distance Traveled: 0 blocks"; Style: (FontSize: 14, TextColor: #ffffff); }
+    Label #GeneralPlaytime { Text: "Playtime: 0s"; Style: (FontSize: 14, TextColor: #ffffff); }
+  }
+}

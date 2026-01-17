@@ -33,9 +33,10 @@ public class PlayerConnectListener {
     private void onPlayerConnect(PlayerConnectEvent event) {
         PlayerRef playerRef = event.getPlayerRef();
         String uuid = playerRef.getUuid().toString();
-        String name = playerRef.toString();
+        String name = playerRef.getUsername();
         
         database.initializePlayer(uuid, name);
+        database.updatePlayerName(uuid, name);
         plugin.getLogger().at(Level.INFO).log("Player " + name + " connected, initialized stats");
     }
 }

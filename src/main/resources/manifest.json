@@ -2,5 +2,6 @@
   "Group": "Leonardson",
   "Name": "HytaleStatistic",
   "Version": "1.0.0",
-  "Main": "br.com.leonardson.Main"
+  "Main": "br.com.leonardson.Main",
+  "IncludesAssetPack": true
 }

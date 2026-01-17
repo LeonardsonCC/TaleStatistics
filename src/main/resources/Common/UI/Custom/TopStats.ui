@@ -1,0 +1,35 @@
+@PanelBg = PatchStyle(TexturePath: "StatsBackground.png");
+
+Group {
+  LayoutMode: Center;
+
+  Group #TopStatsRoot {
+    Anchor: (Width: 720, Height: 760);
+    LayoutMode: Top;
+    Padding: (Left: 24, Right: 24, Top: 18, Bottom: 18);
+    Background: @PanelBg;
+
+    Label #Title {
+      Text: "TOP 10";
+      Style: (FontSize: 28, TextColor: #ffffff, RenderBold: true, Alignment: Center);
+      Padding: (Bottom: 10);
+    }
+
+    Label #Subtitle {
+      Text: "Stat";
+      Style: (FontSize: 16, TextColor: #ffffff, RenderBold: true, Alignment: Center);
+      Padding: (Bottom: 16);
+    }
+
+    Label #Entry1 { Text: "1. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry2 { Text: "2. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry3 { Text: "3. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry4 { Text: "4. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry5 { Text: "5. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry6 { Text: "6. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry7 { Text: "7. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry8 { Text: "8. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry9 { Text: "9. -"; Style: (FontSize: 16, TextColor: #ffffff); Padding: (Bottom: 6); }
+    Label #Entry10 { Text: "10. -"; Style: (FontSize: 16, TextColor: #ffffff); }
+  }
+}

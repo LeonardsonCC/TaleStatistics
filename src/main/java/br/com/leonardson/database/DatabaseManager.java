@@ -8,11 +8,28 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class DatabaseManager {
     private static final String MAIN_PATH = Constants.UNIVERSE_PATH.resolve("HytaleStatistics").toAbsolutePath().toString();
     private static final String DATABASE_PATH = MAIN_PATH + File.separator + "player_stats.db";
+
+    private static final Set<String> ALLOWED_STAT_COLUMNS = Set.of(
+            "kills",
+            "mob_kills",
+            "deaths",
+            "blocks_broken",
+            "blocks_placed",
+            "blocks_damaged",
+            "blocks_used",
+            "items_dropped",
+            "items_picked_up",
+            "items_crafted",
+            "messages_sent",
+            "distance_traveled",
+            "playtime"
+    );
     
     private Connection connection;
     private final HytaleLogger logger;
@@ -219,6 +236,21 @@ public class DatabaseManager {
     }
 
     /**
+     * Updates player name for a UUID
+     */
+    public void updatePlayerName(String uuid, String name) {
+        String sql = "UPDATE player_stats SET player_name = ? WHERE player_uuid = ?";
+
+        try (var pstmt = getConnection().prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, uuid);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.at(Level.SEVERE).log("Failed to update player name: " + e.getMessage());
+        }
+    }
+
+    /**
      * Increments a stat by a certain amount
      */
     public void incrementStat(String uuid, String statName, int amount) {
@@ -267,6 +299,43 @@ public class DatabaseManager {
             return pstmt.executeQuery();
         } catch (SQLException e) {
             logger.at(Level.SEVERE).log("Failed to get player stats: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Gets a player's statistics by name (case-insensitive)
+     */
+    public java.sql.ResultSet getPlayerStatsByName(String name) {
+        String sql = "SELECT * FROM player_stats WHERE LOWER(player_name) = LOWER(?) ORDER BY last_seen DESC LIMIT 1";
+
+        try {
+            var pstmt = getConnection().prepareStatement(sql);
+            pstmt.setString(1, name);
+            return pstmt.executeQuery();
+        } catch (SQLException e) {
+            logger.at(Level.SEVERE).log("Failed to get player stats by name: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Gets top players ordered by a stat column
+     */
+    public java.sql.ResultSet getTopPlayersByStat(String statColumn, int limit) {
+        if (statColumn == null || !ALLOWED_STAT_COLUMNS.contains(statColumn)) {
+            logger.at(Level.WARNING).log("Attempted to query invalid stat column: " + statColumn);
+            return null;
+        }
+
+        String sql = "SELECT player_name, " + statColumn + " FROM player_stats ORDER BY " + statColumn + " DESC, last_seen DESC LIMIT ?";
+
+        try {
+            var pstmt = getConnection().prepareStatement(sql);
+            pstmt.setInt(1, limit);
+            return pstmt.executeQuery();
+        } catch (SQLException e) {
+            logger.at(Level.SEVERE).log("Failed to get top players by stat: " + e.getMessage());
             return null;
         }
     }

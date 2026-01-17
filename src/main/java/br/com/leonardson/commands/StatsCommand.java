@@ -1,11 +1,15 @@
 package br.com.leonardson.commands;
 
 import br.com.leonardson.Main;
+import br.com.leonardson.ui.StatsPage;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
+import com.hypixel.hytale.server.core.command.system.arguments.system.OptionalArg;
+import com.hypixel.hytale.server.core.command.system.arguments.types.ArgTypes;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -15,8 +19,14 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 public class StatsCommand extends AbstractPlayerCommand {
+    private final OptionalArg<String> targetPlayerArg = this.withOptionalArg(
+            "player",
+            "Player name to view stats for",
+            ArgTypes.STRING
+    );
+
     public StatsCommand() {
-        super("stats", "View your statistics", false);
+        super("stats", "View player statistics", false);
     }
 
     @Override
@@ -24,50 +34,67 @@ public class StatsCommand extends AbstractPlayerCommand {
             World world) {
         String uuid = playerRef.getUuid().toString();
         String playerName = playerRef.getUsername();
+        boolean usingTarget = false;
 
         try {
-            ResultSet rs = Main.getInstance().getDatabaseManager().getPlayerStats(uuid);
-            
+            ResultSet rs;
+            if (targetPlayerArg.provided(context)) {
+                usingTarget = true;
+                String targetName = targetPlayerArg.get(context).trim();
+                if (targetName.isEmpty()) {
+                    playerRef.sendMessage(Message.raw("Please provide a valid player name."));
+                    return;
+                }
+                rs = Main.getInstance().getDatabaseManager().getPlayerStatsByName(targetName);
+            } else {
+                rs = Main.getInstance().getDatabaseManager().getPlayerStats(uuid);
+            }
+
             if (rs != null && rs.next()) {
-                // Format statistics display
-                playerRef.sendMessage(Message.raw("========== Statistics for " + playerName + " =========="));
-                playerRef.sendMessage(Message.raw(""));
-                
-                // Combat stats
-                playerRef.sendMessage(Message.raw("Combat:"));
-                playerRef.sendMessage(Message.raw("  Player Kills: " + rs.getInt("kills")));
-                playerRef.sendMessage(Message.raw("  Mob Kills: " + rs.getInt("mob_kills")));
-                playerRef.sendMessage(Message.raw("  Deaths: " + rs.getInt("deaths")));
-                
-                // Building stats
-                playerRef.sendMessage(Message.raw(""));
-                playerRef.sendMessage(Message.raw("Building:"));
-                playerRef.sendMessage(Message.raw("  Blocks Placed: " + rs.getInt("blocks_placed")));
-                playerRef.sendMessage(Message.raw("  Blocks Broken: " + rs.getInt("blocks_broken")));
-                
-                // Item stats
-                playerRef.sendMessage(Message.raw(""));
-                playerRef.sendMessage(Message.raw("Items:"));
-                playerRef.sendMessage(Message.raw("  Items Dropped: " + rs.getInt("items_dropped")));
-                playerRef.sendMessage(Message.raw("  Items Picked Up: " + rs.getInt("items_picked_up")));
-                
-                // Social stats
-                playerRef.sendMessage(Message.raw(""));
-                playerRef.sendMessage(Message.raw("Social:"));
-                playerRef.sendMessage(Message.raw("  Messages Sent: " + rs.getInt("messages_sent")));
-                
-                // General stats
-                playerRef.sendMessage(Message.raw(""));
-                playerRef.sendMessage(Message.raw("General:"));
-                playerRef.sendMessage(Message.raw("  Distance Traveled: " + String.format("%.2f", rs.getDouble("distance_traveled")) + " blocks"));
-                playerRef.sendMessage(Message.raw("  Playtime: " + formatPlaytime(rs.getInt("playtime"))));
-                
-                playerRef.sendMessage(Message.raw(""));
-                playerRef.sendMessage(Message.raw("============================================="));
-                
+                playerName = rs.getString("player_name");
+                int kills = rs.getInt("kills");
+                int mobKills = rs.getInt("mob_kills");
+                int deaths = rs.getInt("deaths");
+                int blocksPlaced = rs.getInt("blocks_placed");
+                int blocksBroken = rs.getInt("blocks_broken");
+                int itemsDropped = rs.getInt("items_dropped");
+                int itemsPickedUp = rs.getInt("items_picked_up");
+                int messagesSent = rs.getInt("messages_sent");
+                String distanceTraveled = String.format("%.2f blocks", rs.getDouble("distance_traveled"));
+                String playtime = formatPlaytime(rs.getInt("playtime"));
+
+                Player playerComponent = store.getComponent(ref, Player.getComponentType());
+                if (playerComponent == null) {
+                    playerRef.sendMessage(Message.raw("Unable to open stats UI right now."));
+                    rs.close();
+                    return;
+                }
+
+                StatsPage page = new StatsPage(
+                        playerRef,
+                        playerName,
+                        kills,
+                        mobKills,
+                        deaths,
+                        blocksPlaced,
+                        blocksBroken,
+                        itemsDropped,
+                        itemsPickedUp,
+                        messagesSent,
+                        distanceTraveled,
+                        playtime
+                );
+                playerComponent.getPageManager().openCustomPage(ref, store, page);
                 rs.close();
             } else {
-                playerRef.sendMessage(Message.raw("No statistics found. Try playing for a bit!"));
+                if (rs != null) {
+                    rs.close();
+                }
+                if (usingTarget) {
+                    playerRef.sendMessage(Message.raw("No statistics found for that player."));
+                } else {
+                    playerRef.sendMessage(Message.raw("No statistics found. Try playing for a bit!"));
+                }
             }
         } catch (SQLException e) {
             playerRef.sendMessage(Message.raw("Error retrieving statistics: " + e.getMessage()));
