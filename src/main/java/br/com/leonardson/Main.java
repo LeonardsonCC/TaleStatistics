@@ -11,6 +11,8 @@ import br.com.leonardson.listeners.PlayerKillEventSystem;
 import br.com.leonardson.listeners.PlayerBlockBreakEventSystem;
 import br.com.leonardson.listeners.PlayerBlockPlaceEventSystem;
 import br.com.leonardson.listeners.PlayerDistanceTraveledSystem;
+import br.com.leonardson.listeners.PlayerItemDropEventSystem;
+import br.com.leonardson.listeners.PlayerItemStatsListener;
 import br.com.leonardson.commands.StatsCommand;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -54,9 +56,13 @@ public class Main extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new PlayerKillEventSystem(this, databaseManager));
         this.getEntityStoreRegistry().registerSystem(new PlayerBlockBreakEventSystem(this, databaseManager));
         this.getEntityStoreRegistry().registerSystem(new PlayerBlockPlaceEventSystem(this, databaseManager));
+        this.getEntityStoreRegistry().registerSystem(new PlayerItemDropEventSystem(this, databaseManager));
         distanceTraveledSystem = new PlayerDistanceTraveledSystem(this, databaseManager);
         this.getEntityStoreRegistry().registerSystem(distanceTraveledSystem);
-        getLogger().at(Level.INFO).log("Death/Kill/Block event systems registered successfully");
+        getLogger().at(Level.INFO).log("Death/Kill/Block/Item event systems registered successfully");
+
+        PlayerItemStatsListener itemStatsListener = new PlayerItemStatsListener(this, databaseManager);
+        itemStatsListener.register();
 
         // Register commands
         this.getCommandRegistry().registerCommand(new StatsCommand());
