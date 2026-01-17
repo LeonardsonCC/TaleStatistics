@@ -8,6 +8,8 @@ import br.com.leonardson.listeners.PlayerDisconnectListener;
 import br.com.leonardson.listeners.PlayerChatListener;
 import br.com.leonardson.listeners.PlayerDeathEventSystem;
 import br.com.leonardson.listeners.PlayerKillEventSystem;
+import br.com.leonardson.listeners.PlayerBlockBreakEventSystem;
+import br.com.leonardson.listeners.PlayerBlockPlaceEventSystem;
 import br.com.leonardson.commands.StatsCommand;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -48,7 +50,9 @@ public class Main extends JavaPlugin {
         // Register ECS death/kill event systems
         this.getEntityStoreRegistry().registerSystem(new PlayerDeathEventSystem(this, databaseManager));
         this.getEntityStoreRegistry().registerSystem(new PlayerKillEventSystem(this, databaseManager));
-        getLogger().at(Level.INFO).log("Death/Kill event systems registered successfully");
+        this.getEntityStoreRegistry().registerSystem(new PlayerBlockBreakEventSystem(this, databaseManager));
+        this.getEntityStoreRegistry().registerSystem(new PlayerBlockPlaceEventSystem(this, databaseManager));
+        getLogger().at(Level.INFO).log("Death/Kill/Block event systems registered successfully");
 
         // Register commands
         this.getCommandRegistry().registerCommand(new StatsCommand());
