@@ -234,6 +234,21 @@ public class DatabaseManager {
     }
 
     /**
+     * Increments a stat by a double amount
+     */
+    public void incrementStat(String uuid, String statName, double amount) {
+        String sql = "UPDATE player_stats SET " + statName + " = " + statName + " + ? WHERE player_uuid = ?";
+
+        try (var pstmt = getConnection().prepareStatement(sql)) {
+            pstmt.setDouble(1, amount);
+            pstmt.setString(2, uuid);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.at(Level.SEVERE).log("Failed to increment stat " + statName + ": " + e.getMessage());
+        }
+    }
+
+    /**
      * Increments a stat by 1
      */
     public void incrementStat(String uuid, String statName) {

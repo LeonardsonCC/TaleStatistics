@@ -10,6 +10,7 @@ import br.com.leonardson.listeners.PlayerDeathEventSystem;
 import br.com.leonardson.listeners.PlayerKillEventSystem;
 import br.com.leonardson.listeners.PlayerBlockBreakEventSystem;
 import br.com.leonardson.listeners.PlayerBlockPlaceEventSystem;
+import br.com.leonardson.listeners.PlayerDistanceTraveledSystem;
 import br.com.leonardson.commands.StatsCommand;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -20,6 +21,7 @@ public class Main extends JavaPlugin {
     private static Main instance;
     private DatabaseManager databaseManager;
     private PlayerDisconnectListener playerDisconnectListener;
+    private PlayerDistanceTraveledSystem distanceTraveledSystem;
 
     public Main(@Nonnull JavaPluginInit init) {
         super(init);
@@ -52,6 +54,8 @@ public class Main extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new PlayerKillEventSystem(this, databaseManager));
         this.getEntityStoreRegistry().registerSystem(new PlayerBlockBreakEventSystem(this, databaseManager));
         this.getEntityStoreRegistry().registerSystem(new PlayerBlockPlaceEventSystem(this, databaseManager));
+        distanceTraveledSystem = new PlayerDistanceTraveledSystem(this, databaseManager);
+        this.getEntityStoreRegistry().registerSystem(distanceTraveledSystem);
         getLogger().at(Level.INFO).log("Death/Kill/Block event systems registered successfully");
 
         // Register commands
@@ -68,6 +72,11 @@ public class Main extends JavaPlugin {
             playerDisconnectListener.saveAllPlaytime();
             getLogger().at(Level.INFO).log("Final playtime save completed");
         }
+
+        if (distanceTraveledSystem != null) {
+            distanceTraveledSystem.flushAll();
+            getLogger().at(Level.INFO).log("Final distance traveled save completed");
+        }
         
         // Disconnect database on shutdown
         if (databaseManager != null && databaseManager.isConnected()) {
@@ -81,5 +90,9 @@ public class Main extends JavaPlugin {
 
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+
+    public PlayerDistanceTraveledSystem getDistanceTraveledSystem() {
+        return distanceTraveledSystem;
     }
 }
