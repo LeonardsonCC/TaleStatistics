@@ -59,8 +59,7 @@ public class DatabaseManager {
                 databaseFile.createNewFile();
                 logger.at(Level.INFO).log("Created database file at: " + DATABASE_PATH);
             } catch (Exception e) {
-                logger.at(Level.SEVERE).log("Failed to create database file: " + e.getMessage());
-                e.printStackTrace();
+                logger.at(Level.SEVERE).withCause(e).log("Failed to create database file: %s", DATABASE_PATH);
             }
         }
     }
@@ -93,11 +92,9 @@ public class DatabaseManager {
                 logger.at(Level.INFO).log("Database connection verified and ready");
             }
         } catch (ClassNotFoundException e) {
-            logger.at(Level.SEVERE).log("SQLite JDBC driver not found: " + e.getMessage());
-            e.printStackTrace();
+            logger.at(Level.SEVERE).withCause(e).log("SQLite JDBC driver not found");
         } catch (SQLException e) {
-            logger.at(Level.SEVERE).log("Failed to connect to database: " + e.getMessage());
-            e.printStackTrace();
+            logger.at(Level.SEVERE).withCause(e).log("Failed to connect to database: %s", DATABASE_PATH);
         }
     }
 
@@ -132,8 +129,7 @@ public class DatabaseManager {
             ensureColumnExists("player_stats", "mob_kills", "INTEGER DEFAULT 0");
             logger.at(Level.INFO).log("Database tables initialized successfully");
         } catch (SQLException e) {
-            logger.at(Level.SEVERE).log("Failed to initialize database tables: " + e.getMessage());
-            e.printStackTrace();
+            logger.at(Level.SEVERE).withCause(e).log("Failed to initialize database tables");
         }
     }
 
@@ -186,8 +182,7 @@ public class DatabaseManager {
                 logger.at(Level.INFO).log("Database connection closed");
             }
         } catch (SQLException e) {
-            logger.at(Level.SEVERE).log("Error while closing database connection: " + e.getMessage());
-            e.printStackTrace();
+            logger.at(Level.SEVERE).withCause(e).log("Error while closing database connection");
         }
     }
 

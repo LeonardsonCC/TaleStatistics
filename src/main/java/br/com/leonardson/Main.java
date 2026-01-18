@@ -34,7 +34,7 @@ public class Main extends JavaPlugin {
     @Override
     protected void setup() {
         super.setup();
-        System.out.println("[HYTALE STATISTICS] Setup method called!");
+        getLogger().at(Level.INFO).log("Initializing HytaleStatistics plugin");
         
         // Initialize database
         databaseManager = new DatabaseManager(this.getLogger());

@@ -24,7 +24,7 @@ public class PlayerConnectListener {
      */
     public void register() {
         plugin.getEventRegistry().register(PlayerConnectEvent.class, this::onPlayerConnect);
-        plugin.getLogger().at(Level.INFO).log("PlayerConnectListener registered");
+        plugin.getLogger().at(Level.FINE).log("PlayerConnectListener registered");
     }
 
     /**
@@ -37,6 +37,6 @@ public class PlayerConnectListener {
         
         database.initializePlayer(uuid, name);
         database.updatePlayerName(uuid, name);
-        plugin.getLogger().at(Level.INFO).log("Player " + name + " connected, initialized stats");
+        plugin.getLogger().at(Level.FINE).log("Player " + name + " connected, initialized stats");
     }
 }

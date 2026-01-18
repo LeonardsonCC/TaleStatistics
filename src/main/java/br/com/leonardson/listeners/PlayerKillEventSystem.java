@@ -43,10 +43,10 @@ public class PlayerKillEventSystem extends EntityEventSystem<EntityStore, KillFe
         PlayerRef targetPlayerRef = store.getComponent(event.getTargetRef(), this.playerRefComponentType);
         if (targetPlayerRef != null) {
             database.incrementStat(playerRef.getUuid().toString(), "kills", 1);
-            plugin.getLogger().at(Level.INFO).log("Player kill recorded for " + playerRef.getUsername());
+            plugin.getLogger().at(Level.FINE).log("Player kill recorded for " + playerRef.getUsername());
         } else {
             database.incrementStat(playerRef.getUuid().toString(), "mob_kills", 1);
-            plugin.getLogger().at(Level.INFO).log("Mob kill recorded for " + playerRef.getUsername());
+            plugin.getLogger().at(Level.FINE).log("Mob kill recorded for " + playerRef.getUsername());
         }
     }
 

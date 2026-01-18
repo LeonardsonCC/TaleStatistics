@@ -25,7 +25,7 @@ public class PlayerItemStatsListener {
 
     public void register() {
         plugin.getEventRegistry().registerGlobal(LivingEntityInventoryChangeEvent.class, this::onInventoryChange);
-        plugin.getLogger().at(Level.INFO).log("Item stats listeners registered successfully");
+        plugin.getLogger().at(Level.FINE).log("Item stats listeners registered successfully");
     }
 
     private void onInventoryChange(@Nonnull LivingEntityInventoryChangeEvent event) {

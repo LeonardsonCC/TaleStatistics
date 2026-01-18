@@ -39,7 +39,7 @@ public class PlayerDeathEventSystem extends EntityEventSystem<EntityStore, KillF
         }
 
         database.incrementStat(playerRef.getUuid().toString(), "deaths", 1);
-        plugin.getLogger().at(java.util.logging.Level.INFO).log("Death recorded for " + playerRef.getUsername());
+        plugin.getLogger().at(java.util.logging.Level.FINE).log("Death recorded for " + playerRef.getUsername());
     }
 
     @Nonnull

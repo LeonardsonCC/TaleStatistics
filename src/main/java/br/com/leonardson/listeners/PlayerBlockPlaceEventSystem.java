@@ -44,7 +44,7 @@ public class PlayerBlockPlaceEventSystem extends EntityEventSystem<EntityStore, 
         }
 
         database.incrementStat(playerRef.getUuid().toString(), "blocks_placed", 1);
-        plugin.getLogger().at(Level.INFO).log("Block placed recorded for " + playerRef.getUsername());
+        plugin.getLogger().at(Level.FINE).log("Block placed recorded for " + playerRef.getUsername());
     }
 
     @Nonnull

@@ -31,7 +31,7 @@ public class PlayerChatListener {
                 return event;
             })
         );
-        plugin.getLogger().at(Level.INFO).log("PlayerChatListener registered (async global)");
+        plugin.getLogger().at(Level.FINE).log("PlayerChatListener registered (async global)");
     }
 
     /**
@@ -39,7 +39,7 @@ public class PlayerChatListener {
      */
     private void onChat(PlayerChatEvent event) {
         if (event.isCancelled()) {
-            plugin.getLogger().at(Level.INFO).log("Chat event was cancelled");
+            plugin.getLogger().at(Level.FINE).log("Chat event was cancelled");
             return;
         }
         
@@ -47,7 +47,7 @@ public class PlayerChatListener {
         if (sender != null) {
             String uuid = sender.getUuid().toString();
             database.incrementStat(uuid, "messages_sent", 1);
-            plugin.getLogger().at(Level.INFO).log("Message count incremented for player: " + sender.getUsername());
+            plugin.getLogger().at(Level.FINE).log("Message count incremented for player: " + sender.getUsername());
         } else {
             plugin.getLogger().at(Level.WARNING).log("Chat event sender was null");
         }

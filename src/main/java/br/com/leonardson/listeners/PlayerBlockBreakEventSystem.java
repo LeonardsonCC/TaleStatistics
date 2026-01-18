@@ -44,7 +44,7 @@ public class PlayerBlockBreakEventSystem extends EntityEventSystem<EntityStore, 
         }
 
         database.incrementStat(playerRef.getUuid().toString(), "blocks_broken", 1);
-        plugin.getLogger().at(Level.INFO).log("Block broken recorded for " + playerRef.getUsername());
+        plugin.getLogger().at(Level.FINE).log("Block broken recorded for " + playerRef.getUsername());
     }
 
     @Nonnull

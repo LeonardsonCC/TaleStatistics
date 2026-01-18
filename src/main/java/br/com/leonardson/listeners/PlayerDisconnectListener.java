@@ -32,7 +32,7 @@ public class PlayerDisconnectListener {
     public void register() {
         plugin.getEventRegistry().register(PlayerConnectEvent.class, this::onPlayerConnect);
         plugin.getEventRegistry().register(PlayerDisconnectEvent.class, this::onPlayerDisconnect);
-        plugin.getLogger().at(Level.INFO).log("PlayerDisconnectListener registered");
+        plugin.getLogger().at(Level.FINE).log("PlayerDisconnectListener registered");
     }
 
     /**
@@ -61,7 +61,7 @@ public class PlayerDisconnectListener {
         sessionStartTimes.remove(playerRef.getUuid());
         
         database.updateLastSeen(uuid);
-        plugin.getLogger().at(Level.INFO).log("Player disconnected, stats saved");
+        plugin.getLogger().at(Level.FINE).log("Player disconnected, stats saved");
     }
     
     /**
