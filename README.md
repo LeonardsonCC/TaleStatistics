@@ -1,4 +1,5 @@
-# HytaleStatistics
+# TaleStatistics
+Hytale Statistics mod
 
 Server-side Hytale plugin that tracks player activity and exposes stats in UI pages. It stores stats in a local SQLite database and provides two player commands for viewing personal stats and top rankings.
 
