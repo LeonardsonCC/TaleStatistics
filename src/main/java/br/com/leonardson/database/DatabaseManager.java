@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 public class DatabaseManager {
-    private static final String MAIN_PATH = Constants.UNIVERSE_PATH.resolve("HytaleStatistics").toAbsolutePath().toString();
+    private static final String MAIN_PATH = Constants.UNIVERSE_PATH.resolve("TaleStatistics").toAbsolutePath().toString();
     private static final String DATABASE_PATH = MAIN_PATH + File.separator + "player_stats.db";
 
     private static final Set<String> ALLOWED_STAT_COLUMNS = Set.of(

@@ -19,7 +19,7 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host "Build successful!" -ForegroundColor Green
 
-$jarFile = "build/libs/HytaleStatistics-1.0-SNAPSHOT-all.jar"
+$jarFile = "build/libs/TaleStatistics-1.0-SNAPSHOT-all.jar"
 $modsPath = "$serverPath\mods"
 
 # Create mods directory if it doesn't exist

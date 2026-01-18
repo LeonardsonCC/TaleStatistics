@@ -1,5 +1,5 @@
 # TaleStatistics
-Hytale Statistics mod
+Tale Statistics mod
 
 Server-side Hytale plugin that tracks player activity and exposes stats in UI pages. It stores stats in a local SQLite database and provides two player commands for viewing personal stats and top rankings.
 
@@ -37,7 +37,7 @@ From the project root:
   - `./gradlew clean fatJar`
 
 Build output:
-- `build/libs/HytaleStatistics-1.0-SNAPSHOT-all.jar`
+- `build/libs/TaleStatistics-1.0-SNAPSHOT-all.jar`
 
 ## Run (recommended)
 Use the included script to build and launch the server with the plugin:
@@ -51,12 +51,12 @@ This will:
 
 ## Manual install
 1. Build the fat JAR.
-2. Copy `build/libs/HytaleStatistics-1.0-SNAPSHOT-all.jar` to your server `mods` folder.
+2. Copy `build/libs/TaleStatistics-1.0-SNAPSHOT-all.jar` to your server `mods` folder.
 3. Start the Hytale server normally.
 
 ## Data storage
 The SQLite database is stored under the Hytale universe path in:
-- `HytaleStatistics/player_stats.db`
+- `TaleStatistics/player_stats.db`
 
 ## Troubleshooting
 - If the server doesn’t start, confirm `HytaleServer/Server/HytaleServer.jar` and `HytaleServer/Assets.zip` exist.
