@@ -3,6 +3,8 @@ Tale Statistics mod
 
 Server-side Hytale plugin that tracks player activity and exposes stats in UI pages. It stores stats in a local SQLite database and provides two player commands for viewing personal stats and top rankings.
 
+<img width="1266" height="712" alt="image" src="https://github.com/user-attachments/assets/179e1b2a-52c9-4f7e-a743-2138dbb82f13" />
+
 ## Features
 - Tracks kills, mob kills, deaths, blocks placed/broken/damaged/used
 - Tracks items dropped/picked up/crafted
