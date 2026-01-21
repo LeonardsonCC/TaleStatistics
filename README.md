@@ -23,7 +23,23 @@ Valid stats for `/topstats`:
 - `items_dropped`, `items_picked_up`, `items_crafted`
 - `messages_sent`, `distance_traveled`, `playtime`
 
-Aliases are accepted (e.g., `kill`, `blocksplaced`, `distancetraveled`).
+## Permissions
+
+To add a permission to the player (in vanilla) you must get the player's UUID:
+```
+/uuid <player_name>
+```
+
+Add the permission for that player:
+```
+/perm user add <uuid> <permission>
+```
+
+The list of permission:
+| Command | Permission |
+|---------|------------|
+| `/stats` | `leonardson.talestatistics.command.stats` |
+| `/topstats <stat>` | `leonardson.talestatistics.command.topstats` |
 
 ## Prerequisites
 - Java 21
