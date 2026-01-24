@@ -10,10 +10,12 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -21,9 +23,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
     private static final long UPDATE_INTERVAL_MS = 5000L;
+    private static final String MULTI_HUD_CLASS = "com.buuz135.mhud.MultipleHUD";
+    private static final String MULTI_HUD_KEY = "TaleStatistics";
 
     @Nonnull
     private final ComponentType<EntityStore, PlayerRef> playerRefComponentType = PlayerRef.getComponentType();
@@ -35,10 +40,15 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
     private final Map<UUID, StatsHud> huds = new HashMap<>();
     private final Map<UUID, Long> lastUpdates = new HashMap<>();
     private final Set<UUID> disabledHud = new HashSet<>();
+    private boolean multipleHudAvailable;
+    private Object multipleHudInstance;
+    private Method multipleHudSetMethod;
+    private Method multipleHudHideMethod;
 
     public StatsHudSystem(@Nonnull Main plugin, @Nonnull DatabaseManager database) {
         this.plugin = plugin;
         this.database = database;
+        initializeMultipleHudSupport();
     }
 
     @Override
@@ -65,7 +75,7 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
         if (hud == null) {
             hud = new StatsHud(playerRef);
             huds.put(uuid, hud);
-            player.getHudManager().setCustomHud(playerRef, hud);
+            registerHud(playerRef, player, hud);
             lastUpdates.put(uuid, 0L);
         }
 
@@ -115,7 +125,7 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
                 hud = new StatsHud(playerRef);
                 huds.put(uuid, hud);
             }
-            player.getHudManager().setCustomHud(playerRef, hud);
+            registerHud(playerRef, player, hud);
             if (!hud.isVisible()) {
                 hud.setVisible(true);
             }
@@ -126,6 +136,60 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
             StatsHud hud = huds.get(uuid);
             if (hud != null && hud.isVisible()) {
                 hud.setVisible(false);
+            }
+            hideHud(playerRef, player);
+        }
+    }
+
+    private void initializeMultipleHudSupport() {
+        try {
+            Class<?> multiHudClass = Class.forName(MULTI_HUD_CLASS);
+            Method getInstanceMethod = multiHudClass.getMethod("getInstance");
+            Object instance = getInstanceMethod.invoke(null);
+            if (instance == null) {
+                return;
+            }
+            multipleHudSetMethod = multiHudClass.getMethod(
+                    "setCustomHud",
+                    Player.class,
+                    PlayerRef.class,
+                    String.class,
+                    CustomUIHud.class
+            );
+            multipleHudHideMethod = multiHudClass.getMethod(
+                    "hideCustomHud",
+                    Player.class,
+                    PlayerRef.class,
+                    String.class
+            );
+            multipleHudInstance = instance;
+            multipleHudAvailable = true;
+            plugin.getLogger().at(Level.INFO).log("MultipleHUD detected, registering HUDs through it");
+        } catch (ReflectiveOperationException ignored) {
+        }
+    }
+
+    private void registerHud(@Nonnull PlayerRef playerRef, @Nonnull Player player, @Nonnull StatsHud hud) {
+        if (multipleHudAvailable && multipleHudInstance != null && multipleHudSetMethod != null) {
+            try {
+                multipleHudSetMethod.invoke(multipleHudInstance, player, playerRef, MULTI_HUD_KEY, hud);
+                return;
+            } catch (ReflectiveOperationException e) {
+                plugin.getLogger().at(Level.WARNING).log("Failed to register HUD with MultipleHUD, falling back");
+                multipleHudAvailable = false;
+            }
+        }
+        player.getHudManager().setCustomHud(playerRef, hud);
+    }
+
+    private void hideHud(@Nonnull PlayerRef playerRef, @Nonnull Player player) {
+        if (multipleHudAvailable && multipleHudInstance != null && multipleHudHideMethod != null) {
+            try {
+                multipleHudHideMethod.invoke(multipleHudInstance, player, playerRef, MULTI_HUD_KEY);
+                return;
+            } catch (ReflectiveOperationException e) {
+                plugin.getLogger().at(Level.WARNING).log("Failed to hide HUD with MultipleHUD, falling back");
+                multipleHudAvailable = false;
             }
         }
     }
