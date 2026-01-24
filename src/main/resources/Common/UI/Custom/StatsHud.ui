@@ -1,5 +1,5 @@
 Group #StatsHudPanel {
-  Anchor: (Width: 200, Height: 104, Right: 24, Top: 260);
+  Anchor: (Width: 200, Height: 194, Right: 24, Top: 260);
   LayoutMode: Top;
   Padding: (Left: 12, Right: 12, Top: 8, Bottom: 8);
   Background: PatchStyle(Color: #1b1b1bcc);
@@ -27,6 +27,23 @@ Group #StatsHudPanel {
     }
   }
 
+  Group #RowMobKills {
+    LayoutMode: Left;
+    Anchor: (Width: 176, Height: 18);
+    Padding: (Bottom: 5);
+
+    Label #MobKillsLabel {
+      Text: "Mob Kills";
+      Style: (FontSize: 11, TextColor: #c9c2b5);
+      Anchor: (Left: 0, Vertical: 0);
+    }
+    Label #MobKillsValue {
+      Text: "0";
+      Style: (FontSize: 11, TextColor: #f6d27b, RenderBold: true);
+      Anchor: (Right: 0, Vertical: 0);
+    }
+  }
+
   Group #RowDeaths {
     LayoutMode: Left;
     Anchor: (Width: 176, Height: 18);
@@ -40,6 +57,57 @@ Group #StatsHudPanel {
     Label #DeathsValue {
       Text: "0";
       Style: (FontSize: 11, TextColor: #f2a6a6, RenderBold: true);
+      Anchor: (Right: 0, Vertical: 0);
+    }
+  }
+
+  Group #RowBlocksBroken {
+    LayoutMode: Left;
+    Anchor: (Width: 176, Height: 18);
+    Padding: (Bottom: 5);
+
+    Label #BlocksBrokenLabel {
+      Text: "Blocks Broken";
+      Style: (FontSize: 11, TextColor: #c9c2b5);
+      Anchor: (Left: 0, Vertical: 0);
+    }
+    Label #BlocksBrokenValue {
+      Text: "0";
+      Style: (FontSize: 11, TextColor: #d7c195, RenderBold: true);
+      Anchor: (Right: 0, Vertical: 0);
+    }
+  }
+
+  Group #RowBlocksPlaced {
+    LayoutMode: Left;
+    Anchor: (Width: 176, Height: 18);
+    Padding: (Bottom: 5);
+
+    Label #BlocksPlacedLabel {
+      Text: "Blocks Placed";
+      Style: (FontSize: 11, TextColor: #c9c2b5);
+      Anchor: (Left: 0, Vertical: 0);
+    }
+    Label #BlocksPlacedValue {
+      Text: "0";
+      Style: (FontSize: 11, TextColor: #d7c195, RenderBold: true);
+      Anchor: (Right: 0, Vertical: 0);
+    }
+  }
+
+  Group #RowMessagesSent {
+    LayoutMode: Left;
+    Anchor: (Width: 176, Height: 18);
+    Padding: (Bottom: 5);
+
+    Label #MessagesSentLabel {
+      Text: "Messages Sent";
+      Style: (FontSize: 11, TextColor: #c9c2b5);
+      Anchor: (Left: 0, Vertical: 0);
+    }
+    Label #MessagesSentValue {
+      Text: "0";
+      Style: (FontSize: 11, TextColor: #b8d6b0, RenderBold: true);
       Anchor: (Right: 0, Vertical: 0);
     }
   }

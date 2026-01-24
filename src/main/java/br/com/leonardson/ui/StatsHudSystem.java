@@ -200,9 +200,13 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
             rs = database.getPlayerStats(uuid.toString());
             if (rs != null && rs.next()) {
                 int kills = rs.getInt("kills");
+                int mobKills = rs.getInt("mob_kills");
                 int deaths = rs.getInt("deaths");
+                int blocksBroken = rs.getInt("blocks_broken");
+                int blocksPlaced = rs.getInt("blocks_placed");
+                int messagesSent = rs.getInt("messages_sent");
                 String playtime = formatPlaytime(rs.getInt("playtime"));
-                hud.updateStats(kills, deaths, playtime);
+                hud.updateStats(kills, mobKills, deaths, blocksBroken, blocksPlaced, messagesSent, playtime);
             }
         } catch (SQLException e) {
             plugin.getLogger().at(java.util.logging.Level.SEVERE).log("Error updating HUD stats: " + e.getMessage());
