@@ -14,7 +14,7 @@ import br.com.leonardson.listeners.PlayerDistanceTraveledSystem;
 import br.com.leonardson.listeners.PlayerItemDropEventSystem;
 import br.com.leonardson.listeners.PlayerItemStatsListener;
 import br.com.leonardson.commands.StatsCommand;
-import br.com.leonardson.commands.TopStatsCommand;
+import br.com.leonardson.commands.StatsTopCommand;
 import br.com.leonardson.ui.StatsHudSystem;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
@@ -72,7 +72,6 @@ public class Main extends JavaPlugin {
 
         // Register commands
         this.getCommandRegistry().registerCommand(new StatsCommand());
-        this.getCommandRegistry().registerCommand(new TopStatsCommand());
         getLogger().at(Level.INFO).log("Statistics commands registered successfully");
     }
 

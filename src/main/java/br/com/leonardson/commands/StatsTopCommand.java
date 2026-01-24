@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class TopStatsCommand extends AbstractPlayerCommand {
+public class StatsTopCommand extends AbstractPlayerCommand {
     private final RequiredArg<String> statArg = this.withRequiredArg(
             "stat",
             "Stat to rank by",
@@ -54,8 +54,8 @@ public class TopStatsCommand extends AbstractPlayerCommand {
             Map.entry("playtime", "playtime")
     );
 
-    public TopStatsCommand() {
-        super("topstats", "View the top 10 players for a stat", false);
+    public StatsTopCommand() {
+        super("top", "View the top 10 players for a stat", false);
     }
 
     @Override

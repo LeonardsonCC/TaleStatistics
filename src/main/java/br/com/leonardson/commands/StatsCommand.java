@@ -7,5 +7,6 @@ public class StatsCommand extends AbstractCommandCollection {
         super("stats", "Manage player statistics");
         addSubCommand(new StatsShowCommand());
         addSubCommand(new StatsSidebarCommand());
+        addSubCommand(new StatsTopCommand());
     }
 }
