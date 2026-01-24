@@ -16,10 +16,8 @@ Server-side Hytale plugin that tracks player activity and exposes stats in UI pa
 ## Commands
 - `/stats show` — View your own stats UI.
 - `/stats show <player>` — View another player’s stats (by name).
-- `/stats sidebar` — Toggle the stats sidebar.
-- `/stats sidebar on` — Show the stats sidebar.
-- `/stats sidebar off` — Hide the stats sidebar.
-- `/topstats <stat>` — View top 10 players for a stat.
+- `/stats sidebar [on|off|toggle]` — Toggle or set the stats sidebar (default: toggle).
+- `/stats top <stat>` — View top 10 players for a stat.
 
 Valid stats for `/topstats`:
 - `kills`, `mob_kills`, `deaths`
@@ -29,21 +27,13 @@ Valid stats for `/topstats`:
 
 ## Permissions
 
-To add a permission to the player (in vanilla) you must get the player's UUID:
-```
-/uuid <player_name>
-```
+Default permissions:
 
-Add the permission for that player:
-```
-/perm user add <uuid> <permission>
-```
-
-The list of permission:
 | Command | Permission |
 |---------|------------|
-| `/stats show`, `/stats sidebar` | `leonardson.talestatistics.command.stats` |
-| `/topstats <stat>` | `leonardson.talestatistics.command.topstats` |
+| `/stats show` | `leonardson.talestatistics.command.stats.show` |
+| `/stats sidebar [on|off|toggle]` | `leonardson.talestatistics.command.stats.sidebar` |
+| `/stats top <stat>` | `leonardson.talestatistics.command.stats.top` |
 
 ## Prerequisites
 - Java 21
