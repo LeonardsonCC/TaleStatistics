@@ -5,6 +5,9 @@ Server-side Hytale plugin that tracks player activity and exposes stats in UI pa
 
 <img width="1266" height="712" alt="image" src="https://github.com/user-attachments/assets/179e1b2a-52c9-4f7e-a743-2138dbb82f13" />
 
+<img width="275" height="270" alt="image" src="https://github.com/user-attachments/assets/669ddb1a-d33e-4db6-81e1-2be66f31e0a2" />
+
+
 ## Features
 - Tracks kills, mob kills, deaths, blocks placed/broken/damaged/used
 - Tracks items dropped/picked up/crafted
