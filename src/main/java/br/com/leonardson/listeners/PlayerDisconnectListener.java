@@ -56,6 +56,10 @@ public class PlayerDisconnectListener {
         if (plugin.getDistanceTraveledSystem() != null) {
             plugin.getDistanceTraveledSystem().onPlayerDisconnect(playerRef.getUuid());
         }
+
+        if (plugin.getStatsHudSystem() != null) {
+            plugin.getStatsHudSystem().onPlayerDisconnect(playerRef.getUuid());
+        }
         
         // Remove from session tracking
         sessionStartTimes.remove(playerRef.getUuid());

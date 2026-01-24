@@ -1,0 +1,64 @@
+Group {
+  Group #StatsHudRoot {
+    Anchor: (Width: 220, Height: 118, Right: 24, Vertical: 0);
+    LayoutMode: Top;
+    Padding: (Left: 14, Right: 14, Top: 10, Bottom: 10);
+    Background: PatchStyle(Color: #1b1b1bcc);
+
+    Label #HudTitle {
+      Text: "STATS";
+      Style: (FontSize: 14, TextColor: #f4e6c8, RenderBold: true, Alignment: Center);
+      Padding: (Bottom: 8);
+    }
+
+    Group #RowKills {
+      LayoutMode: Left;
+      Anchor: (Width: 192, Height: 20);
+      Padding: (Bottom: 6);
+
+      Label #KillsLabel {
+        Text: "Kills";
+        Style: (FontSize: 12, TextColor: #c9c2b5);
+        Anchor: (Left: 0, Vertical: 0);
+      }
+      Label #KillsValue {
+        Text: "0";
+        Style: (FontSize: 12, TextColor: #f6d27b, RenderBold: true);
+        Anchor: (Right: 0, Vertical: 0);
+      }
+    }
+
+    Group #RowDeaths {
+      LayoutMode: Left;
+      Anchor: (Width: 192, Height: 20);
+      Padding: (Bottom: 6);
+
+      Label #DeathsLabel {
+        Text: "Deaths";
+        Style: (FontSize: 12, TextColor: #c9c2b5);
+        Anchor: (Left: 0, Vertical: 0);
+      }
+      Label #DeathsValue {
+        Text: "0";
+        Style: (FontSize: 12, TextColor: #f2a6a6, RenderBold: true);
+        Anchor: (Right: 0, Vertical: 0);
+      }
+    }
+
+    Group #RowPlaytime {
+      LayoutMode: Left;
+      Anchor: (Width: 192, Height: 20);
+
+      Label #PlaytimeLabel {
+        Text: "Playtime";
+        Style: (FontSize: 12, TextColor: #c9c2b5);
+        Anchor: (Left: 0, Vertical: 0);
+      }
+      Label #PlaytimeValue {
+        Text: "0m";
+        Style: (FontSize: 12, TextColor: #9cc7f0, RenderBold: true);
+        Anchor: (Right: 0, Vertical: 0);
+      }
+    }
+  }
+}

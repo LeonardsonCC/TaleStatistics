@@ -1,0 +1,134 @@
+package br.com.leonardson.ui;
+
+import br.com.leonardson.Main;
+import br.com.leonardson.database.DatabaseManager;
+import com.hypixel.hytale.component.Archetype;
+import com.hypixel.hytale.component.ArchetypeChunk;
+import com.hypixel.hytale.component.CommandBuffer;
+import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.query.Query;
+import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+
+import javax.annotation.Nonnull;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
+    private static final long UPDATE_INTERVAL_MS = 5000L;
+
+    @Nonnull
+    private final ComponentType<EntityStore, PlayerRef> playerRefComponentType = PlayerRef.getComponentType();
+    @Nonnull
+    private final ComponentType<EntityStore, Player> playerComponentType = Player.getComponentType();
+
+    private final Main plugin;
+    private final DatabaseManager database;
+    private final Map<UUID, StatsHud> huds = new HashMap<>();
+    private final Map<UUID, Long> lastUpdates = new HashMap<>();
+
+    public StatsHudSystem(@Nonnull Main plugin, @Nonnull DatabaseManager database) {
+        this.plugin = plugin;
+        this.database = database;
+    }
+
+    @Override
+    public boolean isParallel(int archetypeChunkSize, int taskCount) {
+        return false;
+    }
+
+    @Override
+    public void tick(
+            float dt,
+            int index,
+            @Nonnull ArchetypeChunk<EntityStore> archetypeChunk,
+            @Nonnull Store<EntityStore> store,
+            @Nonnull CommandBuffer<EntityStore> commandBuffer
+    ) {
+        PlayerRef playerRef = archetypeChunk.getComponent(index, playerRefComponentType);
+        Player player = archetypeChunk.getComponent(index, playerComponentType);
+        if (playerRef == null || player == null) {
+            return;
+        }
+
+        UUID uuid = playerRef.getUuid();
+        StatsHud hud = huds.get(uuid);
+        if (hud == null) {
+            hud = new StatsHud(playerRef);
+            huds.put(uuid, hud);
+            player.getHudManager().setCustomHud(playerRef, hud);
+            lastUpdates.put(uuid, 0L);
+        }
+
+        long now = System.currentTimeMillis();
+        long lastUpdate = lastUpdates.getOrDefault(uuid, 0L);
+        if (now - lastUpdate < UPDATE_INTERVAL_MS) {
+            return;
+        }
+
+        lastUpdates.put(uuid, now);
+        refreshStats(uuid, hud);
+    }
+
+    @Nonnull
+    @Override
+    public Query<EntityStore> getQuery() {
+        return Archetype.of(playerRefComponentType, playerComponentType);
+    }
+
+    public void onPlayerDisconnect(@Nonnull UUID uuid) {
+        huds.remove(uuid);
+        lastUpdates.remove(uuid);
+    }
+
+    private void refreshStats(@Nonnull UUID uuid, @Nonnull StatsHud hud) {
+        ResultSet rs = null;
+        try {
+            rs = database.getPlayerStats(uuid.toString());
+            if (rs != null && rs.next()) {
+                int kills = rs.getInt("kills");
+                int deaths = rs.getInt("deaths");
+                String playtime = formatPlaytime(rs.getInt("playtime"));
+                hud.updateStats(kills, deaths, playtime);
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().at(java.util.logging.Level.SEVERE).log("Error updating HUD stats: " + e.getMessage());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException ignored) {
+                }
+            }
+        }
+    }
+
+    private String formatPlaytime(int seconds) {
+        if (seconds < 60) {
+            return seconds + " seconds";
+        }
+
+        int minutes = seconds / 60;
+        if (minutes < 60) {
+            return minutes + " minutes";
+        }
+
+        int hours = minutes / 60;
+        minutes = minutes % 60;
+
+        if (hours < 24) {
+            return hours + "h " + minutes + "m";
+        }
+
+        int days = hours / 24;
+        hours = hours % 24;
+
+        return days + "d " + hours + "h " + minutes + "m";
+    }
+}

@@ -15,6 +15,7 @@ import br.com.leonardson.listeners.PlayerItemDropEventSystem;
 import br.com.leonardson.listeners.PlayerItemStatsListener;
 import br.com.leonardson.commands.StatsCommand;
 import br.com.leonardson.commands.TopStatsCommand;
+import br.com.leonardson.ui.StatsHudSystem;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 
@@ -25,6 +26,7 @@ public class Main extends JavaPlugin {
     private DatabaseManager databaseManager;
     private PlayerDisconnectListener playerDisconnectListener;
     private PlayerDistanceTraveledSystem distanceTraveledSystem;
+    private StatsHudSystem statsHudSystem;
 
     public Main(@Nonnull JavaPluginInit init) {
         super(init);
@@ -65,6 +67,9 @@ public class Main extends JavaPlugin {
         PlayerItemStatsListener itemStatsListener = new PlayerItemStatsListener(this, databaseManager);
         itemStatsListener.register();
 
+        statsHudSystem = new StatsHudSystem(this, databaseManager);
+        this.getEntityStoreRegistry().registerSystem(statsHudSystem);
+
         // Register commands
         this.getCommandRegistry().registerCommand(new StatsCommand());
         this.getCommandRegistry().registerCommand(new TopStatsCommand());
@@ -102,5 +107,9 @@ public class Main extends JavaPlugin {
 
     public PlayerDistanceTraveledSystem getDistanceTraveledSystem() {
         return distanceTraveledSystem;
+    }
+
+    public StatsHudSystem getStatsHudSystem() {
+        return statsHudSystem;
     }
 }
