@@ -12,6 +12,8 @@ Server-side Hytale plugin that tracks player activity and exposes stats in UI pa
 - Tracks distance traveled and playtime
 - Stats UI pages for personal and top rankings
 - Optional stats HUD sidebar (enabled by default, toggle with command)
+- Compatible with MultipleHUD (https://www.curseforge.com/hytale/mods/multiplehud), and works standalone without it
+- Warning: If you use other custom UI mods like EyeSpy (https://www.curseforge.com/hytale/mods/eyespy), MultipleHUD is required
 
 ## Commands
 - `/stats show` — View your own stats UI.
@@ -34,6 +36,13 @@ Default permissions:
 | `/stats show` | `leonardson.talestatistics.command.stats.show` |
 | `/stats sidebar [on|off|toggle]` | `leonardson.talestatistics.command.stats.sidebar` |
 | `/stats top <stat>` | `leonardson.talestatistics.command.stats.top` |
+
+Example (vanilla commands):
+
+```
+/uuid <player_name>
+/perm user add <uuid> leonardson.talestatistics.command.stats.show
+```
 
 ## Prerequisites
 - Java 21
