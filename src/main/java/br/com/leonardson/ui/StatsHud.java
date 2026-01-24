@@ -10,10 +10,12 @@ public class StatsHud extends CustomUIHud {
     private int kills;
     private int deaths;
     private String playtime;
+    private boolean visible;
 
     public StatsHud(@Nonnull PlayerRef playerRef) {
         super(playerRef);
         this.playtime = "0m";
+        this.visible = true;
     }
 
     @Override
@@ -32,9 +34,21 @@ public class StatsHud extends CustomUIHud {
         update(false, commandBuilder);
     }
 
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+        UICommandBuilder commandBuilder = new UICommandBuilder();
+        applyValues(commandBuilder);
+        update(false, commandBuilder);
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
     private void applyValues(@Nonnull UICommandBuilder commandBuilder) {
         commandBuilder.set("#KillsValue.Text", String.valueOf(kills));
         commandBuilder.set("#DeathsValue.Text", String.valueOf(deaths));
         commandBuilder.set("#PlaytimeValue.Text", playtime);
+        commandBuilder.set("#StatsHudPanel.Visible", visible);
     }
 }

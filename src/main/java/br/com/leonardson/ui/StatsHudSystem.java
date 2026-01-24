@@ -17,7 +17,9 @@ import javax.annotation.Nonnull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
@@ -32,6 +34,7 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
     private final DatabaseManager database;
     private final Map<UUID, StatsHud> huds = new HashMap<>();
     private final Map<UUID, Long> lastUpdates = new HashMap<>();
+    private final Set<UUID> disabledHud = new HashSet<>();
 
     public StatsHudSystem(@Nonnull Main plugin, @Nonnull DatabaseManager database) {
         this.plugin = plugin;
@@ -66,6 +69,17 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
             lastUpdates.put(uuid, 0L);
         }
 
+        if (disabledHud.contains(uuid)) {
+            if (hud.isVisible()) {
+                hud.setVisible(false);
+            }
+            return;
+        }
+
+        if (!hud.isVisible()) {
+            hud.setVisible(true);
+        }
+
         long now = System.currentTimeMillis();
         long lastUpdate = lastUpdates.getOrDefault(uuid, 0L);
         if (now - lastUpdate < UPDATE_INTERVAL_MS) {
@@ -85,6 +99,35 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
     public void onPlayerDisconnect(@Nonnull UUID uuid) {
         huds.remove(uuid);
         lastUpdates.remove(uuid);
+        disabledHud.remove(uuid);
+    }
+
+    public boolean isHudEnabled(@Nonnull UUID uuid) {
+        return !disabledHud.contains(uuid);
+    }
+
+    public void setHudEnabled(@Nonnull PlayerRef playerRef, @Nonnull Player player, boolean enabled) {
+        UUID uuid = playerRef.getUuid();
+        if (enabled) {
+            disabledHud.remove(uuid);
+            StatsHud hud = huds.get(uuid);
+            if (hud == null) {
+                hud = new StatsHud(playerRef);
+                huds.put(uuid, hud);
+            }
+            player.getHudManager().setCustomHud(playerRef, hud);
+            if (!hud.isVisible()) {
+                hud.setVisible(true);
+            }
+            lastUpdates.put(uuid, 0L);
+            refreshStats(uuid, hud);
+        } else {
+            disabledHud.add(uuid);
+            StatsHud hud = huds.get(uuid);
+            if (hud != null && hud.isVisible()) {
+                hud.setVisible(false);
+            }
+        }
     }
 
     private void refreshStats(@Nonnull UUID uuid, @Nonnull StatsHud hud) {
