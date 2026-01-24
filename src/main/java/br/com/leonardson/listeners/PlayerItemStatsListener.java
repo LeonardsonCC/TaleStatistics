@@ -2,6 +2,7 @@ package br.com.leonardson.listeners;
 
 import br.com.leonardson.Main;
 import br.com.leonardson.database.DatabaseManager;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.event.events.entity.LivingEntityInventoryChangeEvent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
@@ -11,6 +12,8 @@ import com.hypixel.hytale.server.core.inventory.transaction.ListTransaction;
 import com.hypixel.hytale.server.core.inventory.transaction.MoveTransaction;
 import com.hypixel.hytale.server.core.inventory.transaction.SlotTransaction;
 import com.hypixel.hytale.server.core.inventory.transaction.Transaction;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.logging.Level;
 import javax.annotation.Nonnull;
 
@@ -38,8 +41,28 @@ public class PlayerItemStatsListener {
             return;
         }
 
-        database.incrementStat(player.getUuid().toString(), "items_picked_up", added);
-        plugin.getLogger().at(Level.FINE).log("Items picked up recorded for player " + player.getUuid());
+        String playerUuid = resolvePlayerUuid(player);
+        if (playerUuid == null) {
+            return;
+        }
+        database.incrementStat(playerUuid, "items_picked_up", added);
+        plugin.getLogger().at(Level.FINE).log("Items picked up recorded for player " + playerUuid);
+    }
+
+    private String resolvePlayerUuid(Player player) {
+        Ref<EntityStore> playerRefHandle = player.getReference();
+        if (playerRefHandle != null) {
+            PlayerRef playerRef = playerRefHandle.getStore().getComponent(playerRefHandle, PlayerRef.getComponentType());
+            if (playerRef != null) {
+                return playerRef.getUuid().toString();
+            }
+        }
+        return getLegacyUuid(player);
+    }
+
+    @SuppressWarnings("removal")
+    private String getLegacyUuid(Player player) {
+        return player.getUuid().toString();
     }
 
     private int countAddedItems(Transaction transaction) {
