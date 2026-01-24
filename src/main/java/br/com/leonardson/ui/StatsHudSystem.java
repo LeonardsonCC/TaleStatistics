@@ -1,6 +1,7 @@
 package br.com.leonardson.ui;
 
 import br.com.leonardson.Main;
+import br.com.leonardson.config.PluginConfig;
 import br.com.leonardson.database.DatabaseManager;
 import com.hypixel.hytale.component.Archetype;
 import com.hypixel.hytale.component.ArchetypeChunk;
@@ -37,6 +38,7 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
 
     private final Main plugin;
     private final DatabaseManager database;
+    private final boolean defaultHudEnabled;
     private final Map<UUID, StatsHud> huds = new HashMap<>();
     private final Map<UUID, Long> lastUpdates = new HashMap<>();
     private final Set<UUID> disabledHud = new HashSet<>();
@@ -45,9 +47,10 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
     private Method multipleHudSetMethod;
     private Method multipleHudHideMethod;
 
-    public StatsHudSystem(@Nonnull Main plugin, @Nonnull DatabaseManager database) {
+    public StatsHudSystem(@Nonnull Main plugin, @Nonnull DatabaseManager database, @Nonnull PluginConfig config) {
         this.plugin = plugin;
         this.database = database;
+        this.defaultHudEnabled = config.isDefaultSidebarEnabled();
         initializeMultipleHudSupport();
     }
 
@@ -76,6 +79,11 @@ public class StatsHudSystem extends EntityTickingSystem<EntityStore> {
             hud = new StatsHud(playerRef);
             huds.put(uuid, hud);
             registerHud(playerRef, player, hud);
+            if (!defaultHudEnabled) {
+                disabledHud.add(uuid);
+                hud.setVisible(false);
+                hideHud(playerRef, player);
+            }
             lastUpdates.put(uuid, 0L);
         }
 

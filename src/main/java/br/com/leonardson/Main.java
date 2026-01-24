@@ -3,6 +3,7 @@ package br.com.leonardson;
 import javax.annotation.Nonnull;
 
 import br.com.leonardson.database.DatabaseManager;
+import br.com.leonardson.config.PluginConfig;
 import br.com.leonardson.listeners.PlayerConnectListener;
 import br.com.leonardson.listeners.PlayerDisconnectListener;
 import br.com.leonardson.listeners.PlayerChatListener;
@@ -27,6 +28,7 @@ public class Main extends JavaPlugin {
     private PlayerDisconnectListener playerDisconnectListener;
     private PlayerDistanceTraveledSystem distanceTraveledSystem;
     private StatsHudSystem statsHudSystem;
+    private PluginConfig pluginConfig;
 
     public Main(@Nonnull JavaPluginInit init) {
         super(init);
@@ -37,6 +39,9 @@ public class Main extends JavaPlugin {
     protected void setup() {
         super.setup();
         getLogger().at(Level.INFO).log("Initializing TaleStatistics plugin");
+
+        pluginConfig = new PluginConfig(getDataDirectory(), getLogger());
+        pluginConfig.load();
         
         // Initialize database
         databaseManager = new DatabaseManager(this.getLogger());
@@ -67,7 +72,7 @@ public class Main extends JavaPlugin {
         PlayerItemStatsListener itemStatsListener = new PlayerItemStatsListener(this, databaseManager);
         itemStatsListener.register();
 
-        statsHudSystem = new StatsHudSystem(this, databaseManager);
+        statsHudSystem = new StatsHudSystem(this, databaseManager, pluginConfig);
         this.getEntityStoreRegistry().registerSystem(statsHudSystem);
 
         // Register commands
