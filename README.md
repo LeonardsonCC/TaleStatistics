@@ -1,7 +1,7 @@
 # TaleStatistics
 Tale Statistics mod
 
-Server-side Hytale plugin that tracks player activity and exposes stats in UI pages. It stores stats in a local SQLite database and provides two player commands for viewing personal stats and top rankings.
+Server-side Hytale plugin that tracks player activity and exposes stats in UI pages plus an optional HUD sidebar. It stores stats in a local SQLite database and provides player commands for stats, the sidebar, and top rankings.
 
 <img width="1266" height="712" alt="image" src="https://github.com/user-attachments/assets/179e1b2a-52c9-4f7e-a743-2138dbb82f13" />
 
@@ -11,10 +11,14 @@ Server-side Hytale plugin that tracks player activity and exposes stats in UI pa
 - Tracks chat messages sent
 - Tracks distance traveled and playtime
 - Stats UI pages for personal and top rankings
+- Optional stats HUD sidebar (enabled by default, toggle with command)
 
 ## Commands
-- `/stats` — View your own stats UI.
-- `/stats <player>` — View another player’s stats (by name).
+- `/stats show` — View your own stats UI.
+- `/stats show <player>` — View another player’s stats (by name).
+- `/stats sidebar` — Toggle the stats sidebar.
+- `/stats sidebar on` — Show the stats sidebar.
+- `/stats sidebar off` — Hide the stats sidebar.
 - `/topstats <stat>` — View top 10 players for a stat.
 
 Valid stats for `/topstats`:
@@ -38,7 +42,7 @@ Add the permission for that player:
 The list of permission:
 | Command | Permission |
 |---------|------------|
-| `/stats` | `leonardson.talestatistics.command.stats` |
+| `/stats show`, `/stats sidebar` | `leonardson.talestatistics.command.stats` |
 | `/topstats <stat>` | `leonardson.talestatistics.command.topstats` |
 
 ## Prerequisites
